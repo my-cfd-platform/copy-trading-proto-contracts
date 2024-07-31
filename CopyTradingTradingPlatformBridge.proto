@@ -68,10 +68,7 @@ message CopyTradingPlatformBridgeOpenPositionResponse{
 message CopyTradingPlatformBridgeClosePositionRequest{
     string TraderId = 1;
     string AccountId = 2;
-    oneof position{
-        string PendingOrderId = 3;
-        string MarketOrderId = 4;
-    }
+    string PositionId = 3;
 }
 
 message CopyTradingPlatformBridgeClosePositionResponse{
