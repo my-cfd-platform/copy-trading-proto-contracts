@@ -106,7 +106,6 @@ message CopyTradingEngineDisableProviderGrpcRequest{
     string ProviderId = 1;
 }
 
-
 service CopyTradingEngineGrpcService{
     rpc EnableProviderAccount(CopyTradingEngineEnableProviderAccountGrpcRequest) returns (CopyTradingEngineProviderGrpcModel);
     rpc GetProviders(google.protobuf.Empty) returns (stream CopyTradingEngineProviderGrpcModel);
