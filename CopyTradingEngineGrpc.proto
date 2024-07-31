@@ -62,19 +62,16 @@ message CopyTradingEngineMarketOrderGrpcModel{
 }
 message CopyTradingProcessPositionOpenedRequest{
     string ProviderId = 1;
-        string ProviderTraderId = 2;
-        string ProviderAccountId = 3;
-        string PositionId = 4;
-        string Symbol = 5;
-        double Size = 6;
-        optional double TakeProfitPrice = 7;
-        optional double StopLossPrice = 8;
-        optional double TakeProfitPl = 9;
-        optional double StopLossPl = 10;
-        oneof position_type {
-            CopyTradingEnginePendingOrderGrpcModel PendingOrder = 11;
-            CopyTradingEngineMarketOrderGrpcModel MarketOrder = 12;
-        }
+    string ProviderTraderId = 2;
+    string ProviderAccountId = 3;
+    string PositionId = 4;
+    string Symbol = 5;
+    double Size = 6;
+    optional double TakeProfitPrice = 7;
+    optional double StopLossPrice = 8;
+    optional double TakeProfitPl = 9;
+    optional double StopLossPl = 10;
+    CopyTradingEngineMarketOrderGrpcModel MarketOrder = 12;
 }
 
 message CopyTradingProcessPositionOpenedResponse{
