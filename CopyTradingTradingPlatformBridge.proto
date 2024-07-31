@@ -1,0 +1,103 @@
+
+syntax = "proto3";
+package copy_trading_trading_platform_bridge;
+import "google/protobuf/empty.proto";
+
+enum CopyTradingPlatformBridgeOperationCodes{
+    Ok = 0;
+    NotFound = 1;
+    EngineError = 2;
+}
+
+message CopyTradingPlatformBridgeAccountGrpcModel{
+    string AccountId = 1;
+    string TraderId = 2;
+    string Collateral = 3;
+    uint64 DateCreate = 4;
+    double Balance = 5;
+}
+
+enum CopyTradingPlatformBridgePositionSide{
+    Buy = 0;
+    Sell = 1;
+}
+
+message CopyTradingPlatformBridgeMarketPositionGrpcModel{
+    string TraderId = 1;
+    string AccountId = 2;
+    string AssetPair = 3;
+    double Size = 4;
+    double OpenPrice = 5;
+    optional double TakeProfitPrice = 6;
+    optional double StopLossPrice = 7;
+    optional double TakeProfitPl = 8;
+    optional double StopLossPl = 9;
+    uint64 OpenDate = 10;
+    string Id = 11;
+}
+
+message CopyTradingPlatformBridgeFindAccountRequest{
+    string TraderId = 1;
+    string AccountId = 2;
+}
+
+message CopyTradingPlatformBridgeFindAccountResponse{
+    optional CopyTradingPlatformBridgeAccountGrpcModel Account = 1;
+    CopyTradingPlatformBridgeOperationCodes Status = 2;
+}
+
+message CopyTradingPlatformBridgeOpenPositionRequest{
+    string TraderId = 1;
+    string AccountId = 2;
+    string AssetPair = 3;
+    double Size = 4;
+    CopyTradingPlatformBridgePositionSide Side = 5;
+    optional double TakeProfitPrice = 6;
+    optional double StopLossPrice = 7;
+    optional double TakeProfitPl = 8;
+    optional double StopLossPl = 9;
+    double OpenPrice = 10;
+    uint64 OpenDate = 11;
+}
+
+message CopyTradingPlatformBridgeOpenPositionResponse{
+    CopyTradingPlatformBridgeOperationCodes Status = 1;
+    CopyTradingPlatformBridgeMarketPositionGrpcModel Position = 2;
+}
+
+message CopyTradingPlatformBridgeClosePositionRequest{
+    string TraderId = 1;
+    string AccountId = 2;
+    oneof position{
+        string PendingOrderId = 3;
+        string MarketOrderId = 4;
+    }
+}
+
+message CopyTradingPlatformBridgeClosePositionResponse{
+    CopyTradingPlatformBridgeOperationCodes Status = 1;
+    CopyTradingPlatformBridgeMarketPositionGrpcModel Position = 2;
+}
+
+message CopyTradingPlatformBridgeChargeCommissionRequest{
+    string TraderId = 1;
+    string AccountId = 2;
+    double Delta = 3;
+    optional string Comment = 4;
+}
+
+message CopyTradingPlatformBridgeChargeCommissionResponse{
+    CopyTradingPlatformBridgeOperationCodes Status = 1;
+}
+
+
+service CopyTradingPlatformBridgeService{
+    rpc FindAccount(CopyTradingPlatformBridgeFindAccountRequest) returns (CopyTradingPlatformBridgeFindAccountResponse);
+    rpc ChargeCommission(stream CopyTradingPlatformBridgeChargeCommissionRequest) returns (stream CopyTradingPlatformBridgeChargeCommissionResponse);
+    
+    rpc OpenPosition(stream CopyTradingPlatformBridgeOpenPositionRequest) returns (stream CopyTradingPlatformBridgeOpenPositionResponse);
+    rpc ClosePosition(stream CopyTradingPlatformBridgeClosePositionRequest) returns (stream CopyTradingPlatformBridgeClosePositionResponse);
+
+    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+

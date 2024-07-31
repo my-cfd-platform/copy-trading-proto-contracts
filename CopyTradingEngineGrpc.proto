@@ -1,0 +1,123 @@
+
+syntax = "proto3";
+package copy_trading_engine;
+import "google/protobuf/empty.proto";
+
+enum CopyTradingSubscriptionStatus{
+    Active = 0;
+    Paused = 1;
+}
+
+message CopyTradingEngineProviderGrpcModel{
+    string ProviderId = 1;
+    string TraderId = 2;
+    string AccountId = 3;
+    bool IsStreaming = 4;
+    uint64 CreateDate = 5;
+}
+
+message CopyTradingSubscriptionGrpcModel{
+    string SubscriptionId = 1;
+    string ProviderId = 2;
+    string TargetTraderId = 3;
+    string TargetAccountId = 4;
+    double CopyTradingCoefficient = 5;
+    optional double ForceStopLoss = 6;
+    CopyTradingSubscriptionStatus Status = 7;
+}
+
+message CopyTradingSubscribeGrpcRequest{
+    string ProviderId = 1;
+    string TargetTraderId = 2;
+    string TargetAccountId = 3;
+    string ProviderAccountId = 4;
+    double CopyTradingCoefficient = 5;
+    optional double ForceStopLoss = 6;
+}
+
+message CopyTradingUnsubscribeGrpcRequest{
+    string SubscriptionId = 1;
+    double CopyTradingCoefficient = 2;
+    optional double ForceStopLoss = 3;
+}
+
+message GetClientSubscriptionsGrpcRequest{
+    string TraderId = 1;
+    string AccountId = 2;
+}
+
+enum CopyTradingLimitOrderType{
+    Limit = 0;
+    Stop = 1;
+}
+
+message CopyTradingEnginePendingOrderGrpcModel{
+    CopyTradingLimitOrderType OrderType = 1;
+    double DesirePrice = 2;
+}
+
+message CopyTradingEngineMarketOrderGrpcModel{
+    double OpenPrice = 1;
+    uint64 OpenDate = 2;
+}
+message CopyTradingProcessPositionOpenedRequest{
+    string ProviderId = 1;
+        string ProviderTraderId = 2;
+        string ProviderAccountId = 3;
+        string PositionId = 4;
+        string Symbol = 5;
+        double Size = 6;
+        optional double TakeProfitPrice = 7;
+        optional double StopLossPrice = 8;
+        optional double TakeProfitPl = 9;
+        optional double StopLossPl = 10;
+        oneof position_type {
+            CopyTradingEnginePendingOrderGrpcModel PendingOrder = 11;
+            CopyTradingEngineMarketOrderGrpcModel MarketOrder = 12;
+        }
+}
+
+message CopyTradingProcessPositionOpenedResponse{
+    string ProviderId = 1;
+    string ProviderTraderId = 2;
+    string ProviderAccountId = 3;
+    map<string, string> SuccessExecutedSubscriptions = 4;
+    repeated string FailedExecutedSubscriptions = 5;
+}
+
+message CopyTradingProcessPositionClosedRequest{
+    string ProviderId = 1;
+    string ProviderTraderId = 2;
+    string ProviderAccountId = 3;
+    string PositionId = 4;
+}
+message CopyTradingProcessPositionClosedResponse{
+    string ProviderId = 1;
+    string ProviderTraderId = 2;
+    string ProviderAccountId = 3;
+    map<string, string> SuccessExecutedSubscriptions = 4;
+    repeated string FailedExecutedSubscriptions = 5;
+}
+
+message CopyTradingEngineEnableProviderAccountGrpcRequest{
+    string ProviderId = 1;
+    string TraderId = 2;
+    string AccountId = 3;
+}
+
+message CopyTradingEngineDisableProviderGrpcRequest{
+    string ProviderId = 1;
+}
+
+
+service CopyTradingEngineGrpcService{
+    rpc EnableProviderAccount(CopyTradingEngineEnableProviderAccountGrpcRequest) returns (CopyTradingEngineProviderGrpcModel);
+    rpc GetProviders(google.protobuf.Empty) returns (stream CopyTradingEngineProviderGrpcModel);
+    rpc DisableProvider(CopyTradingEngineDisableProviderGrpcRequest) returns (google.protobuf.Empty);
+
+    rpc SubscribeToProvider(CopyTradingSubscribeGrpcRequest) returns (google.protobuf.Empty);
+    rpc UnsubscribeFromProvider(CopyTradingUnsubscribeGrpcRequest) returns (google.protobuf.Empty);
+    rpc GetClientAccountSubscriptions(GetClientSubscriptionsGrpcRequest) returns (stream CopyTradingSubscriptionGrpcModel);
+
+    rpc Ping(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
