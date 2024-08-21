@@ -30,9 +30,8 @@ message CopyTradingSubscribeGrpcRequest{
     string ProviderId = 1;
     string TargetTraderId = 2;
     string TargetAccountId = 3;
-    string ProviderAccountId = 4;
-    double CopyTradingCoefficient = 5;
-    optional double ForceStopLoss = 6;
+    double CopyTradingCoefficient = 4;
+    optional double ForceStopLoss = 5;
 }
 
 message CopyTradingUnsubscribeGrpcRequest{
