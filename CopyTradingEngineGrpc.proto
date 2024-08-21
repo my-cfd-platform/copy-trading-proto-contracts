@@ -36,8 +36,6 @@ message CopyTradingSubscribeGrpcRequest{
 
 message CopyTradingUnsubscribeGrpcRequest{
     string SubscriptionId = 1;
-    double CopyTradingCoefficient = 2;
-    optional double ForceStopLoss = 3;
 }
 
 message GetClientSubscriptionsGrpcRequest{
